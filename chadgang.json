@@ -1,0 +1,10 @@
+{
+  "title": "Morpion",
+  "description": "Le duel de croix et de ronds en ligne : aligne trois symboles avant ton pote, avec effets et revanche !",
+  "author": "ChadGang",
+  "category": "Réflexion",
+  "emoji": "❌",
+  "joueurs": "2",
+  "image": "cover.png",
+  "classement": "victoires"
+}

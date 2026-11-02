@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Morpion – ChadGangGames</title>
+<link rel="stylesheet" href="style.css">
+<script src="/_sdk.js"></script>
+</head>
+<body>
+<div id="bg"></div>
+<div id="flash"></div>
+<canvas id="fx"></canvas>
+<button id="mute" class="icon-btn" title="Couper / remettre le son" aria-label="Son">🔊</button>
+
+<main id="app">
+
+  <!-- ===== Accueil ===== -->
+  <section id="lobby" class="screen">
+    <h1 class="logo"><span class="lx">X</span><span class="lo">O</span> Morpion</h1>
+    <p class="tag">Aligne trois symboles avant ton pote !</p>
+
+    <div class="card">
+      <p id="hello" class="hello"></p>
+      <div id="online-box">
+        <button id="btn-create" class="btn yellow">⚔️ Créer une salle</button>
+        <div class="join">
+          <input id="code" maxlength="12" placeholder="CODE" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <button id="btn-join" class="btn">Rejoindre</button>
+        </div>
+      </div>
+      <button id="btn-local" class="btn alt">👥 Même écran (2 joueurs)</button>
+      <p id="lobby-msg" class="msg"></p>
+    </div>
+
+    <div class="card small lb" id="lb1"></div>
+  </section>
+
+  <!-- ===== Partie ===== -->
+  <section id="game" class="screen hidden">
+    <div class="roomline">
+      <button id="btn-quit" class="chip-btn">← Quitter</button>
+      <button id="roomcode" class="chip-btn"></button>
+    </div>
+
+    <div class="players">
+      <div class="pl" id="pl-X"></div>
+      <div class="vs">VS<small id="draws"></small></div>
+      <div class="pl" id="pl-O"></div>
+    </div>
+
+    <p id="status" class="status"></p>
+
+    <div class="stage">
+      <div id="board" class="board"></div>
+      <div id="banner" class="banner"></div>
+    </div>
+
+    <button id="btn-rematch" class="btn yellow hidden">🔁 Revanche !</button>
+
+    <div class="emos" id="emos"></div>
+    <div class="history" id="history"></div>
+    <div class="card small lb" id="lb2"></div>
+  </section>
+
+</main>
+
+<script src="game.js"></script>
+</body>
+</html>

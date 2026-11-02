@@ -1,0 +1,217 @@
+/* Morpion – ChadGangGames */
+:root {
+  --blue: #2433f2;
+  --yellow: #ffd426;
+  --ink: #12102b;
+  --pink: #ff3d6e;
+  --mint: #3be8b0;
+  --sh: 4px 4px 0 var(--ink);
+  --bs: min(88vw, 46dvh, 440px);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: var(--blue);
+  color: var(--ink);
+  font-family: "Trebuchet MS", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 800;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+.hidden { display: none !important; }
+
+/* ---------- Fond & effets ---------- */
+#bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+#bg i {
+  position: absolute; font-style: normal; font-weight: 900; color: #fff; opacity: .11;
+  animation: drift linear infinite;
+}
+@keyframes drift {
+  from { transform: translateY(110vh) rotate(0deg); }
+  to   { transform: translateY(-30vh) rotate(360deg); }
+}
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+#flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 40; }
+#flash.go { animation: flash .5s ease-out; }
+@keyframes flash { from { opacity: .75; } to { opacity: 0; } }
+
+.icon-btn {
+  position: fixed; top: 8px; right: 8px; z-index: 70;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 3px solid var(--ink); background: #fff; box-shadow: 3px 3px 0 var(--ink);
+  font-size: 1.1rem; cursor: pointer;
+}
+
+/* ---------- Mise en page ---------- */
+#app {
+  position: relative; z-index: 1;
+  min-height: 100dvh; width: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 14px 12px calc(24px + env(safe-area-inset-bottom));
+}
+.screen { width: 100%; max-width: 520px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+.logo {
+  margin: 8px 0 0; color: #fff; font-size: clamp(2.2rem, 11vw, 3.6rem); font-weight: 900;
+  text-shadow: 4px 4px 0 var(--ink); letter-spacing: .02em; text-align: center;
+}
+.logo .lx { color: var(--pink); display: inline-block; animation: wob 2.4s ease-in-out infinite; }
+.logo .lo { color: var(--yellow); display: inline-block; animation: wob 2.4s ease-in-out .5s infinite; margin-right: .2em; }
+@keyframes wob { 50% { transform: rotate(-10deg) scale(1.12); } }
+.tag { margin: 0 0 4px; color: #fff; text-shadow: 2px 2px 0 var(--ink); text-align: center; }
+
+.card {
+  background: #fff; border: 4px solid var(--ink); border-radius: 18px; box-shadow: var(--sh);
+  padding: 14px; width: 100%; display: flex; flex-direction: column; gap: 10px;
+}
+.card.small { padding: 10px 14px; gap: 2px; }
+.hello { margin: 0; text-align: center; }
+.msg { margin: 0; min-height: 1.2em; text-align: center; color: var(--pink); font-size: .9rem; }
+
+.btn {
+  font: inherit; font-weight: 900; font-size: 1.05rem; color: var(--ink);
+  padding: 12px 16px; border: 4px solid var(--ink); border-radius: 14px; background: #fff;
+  box-shadow: var(--sh); cursor: pointer; transition: transform .08s, box-shadow .08s;
+}
+.btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn.yellow { background: var(--yellow); }
+.btn.alt { background: #dfe3ff; }
+#online-box { display: flex; flex-direction: column; gap: 10px; }
+.join { display: flex; gap: 8px; }
+.join input {
+  flex: 1; min-width: 0; font: inherit; font-weight: 900; font-size: 1.25rem; letter-spacing: .25em;
+  text-align: center; text-transform: uppercase; color: var(--ink);
+  border: 4px solid var(--ink); border-radius: 14px; padding: 8px;
+}
+
+.roomline { width: 100%; display: flex; justify-content: space-between; gap: 8px; }
+.chip-btn {
+  font: inherit; font-weight: 900; font-size: .9rem; color: var(--ink);
+  background: #fff; border: 3px solid var(--ink); border-radius: 12px; padding: 5px 12px;
+  box-shadow: 3px 3px 0 var(--ink); cursor: pointer;
+}
+
+/* ---------- Joueurs ---------- */
+.players { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; width: 100%; align-items: center; }
+.vs { color: #fff; text-shadow: 2px 2px 0 var(--ink); text-align: center; font-size: 1.1rem; line-height: 1; }
+.vs small { display: block; font-size: .6rem; margin-top: 3px; min-height: 1em; }
+.pl {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+  background: #fff; border: 4px solid var(--ink); border-radius: 16px; box-shadow: var(--sh);
+  padding: 5px 8px; transition: transform .2s, background .2s, opacity .2s;
+}
+.pl.active { background: var(--yellow); transform: translateY(-3px) scale(1.04); }
+.pl.off { opacity: .45; }
+.av {
+  width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--ink); background: #dfe3ff;
+  display: grid; place-items: center; overflow: hidden; flex: none; font-weight: 900;
+}
+.av img { width: 100%; height: 100%; object-fit: cover; }
+.nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; }
+.sym { font-size: 1.3rem; font-weight: 900; }
+.sym.x { color: var(--pink); }
+.sym.o { color: var(--blue); }
+.sc { background: var(--ink); color: #fff; border-radius: 10px; padding: 1px 8px; font-size: 1.05rem; }
+.fire { font-size: .8rem; }
+
+.status {
+  margin: 4px 0 0; color: #fff; font-size: 1.15rem; text-align: center; min-height: 1.5em;
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+/* ---------- Plateau ---------- */
+.stage { position: relative; width: var(--bs); height: var(--bs); perspective: 900px; }
+.board {
+  position: relative; width: 100%; height: 100%;
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; padding: 8px;
+  background: var(--ink); border-radius: 22px; box-shadow: 6px 6px 0 rgba(0, 0, 0, .35);
+  transition: transform .15s ease-out;
+}
+.cell {
+  position: relative; display: grid; place-items: center; padding: 10%;
+  border: 0; border-radius: 14px; background: #fff; cursor: default; font: inherit;
+  transition: background .15s, transform .1s;
+}
+.board.can .cell:not(.filled) { cursor: pointer; }
+.board.can .cell:not(.filled):hover { background: #fff6c8; transform: scale(.96); }
+.cell .mk { width: 100%; height: 100%; overflow: visible; }
+.ghost { position: absolute; inset: 15%; width: 70%; height: 70%; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.board[data-ghost="X"] .cell:not(.filled):hover .gx { opacity: .25; }
+.board[data-ghost="O"] .cell:not(.filled):hover .go { opacity: .25; }
+
+.mk.x path { stroke: var(--pink); stroke-width: 15; stroke-linecap: round; fill: none; stroke-dasharray: 1; stroke-dashoffset: 0; animation: draw .28s ease-out backwards; }
+.mk.x .s2 { animation-delay: .12s; }
+.mk.o circle {
+  stroke: var(--blue); stroke-width: 15; fill: none; stroke-dasharray: 1; stroke-dashoffset: 0;
+  transform-box: fill-box; transform-origin: center; transform: rotate(-90deg);
+  animation: draw .38s ease-out backwards;
+}
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.board.quiet .mk * { animation: none; }
+
+.cell.win { background: var(--yellow); animation: winpulse .55s ease-in-out infinite alternate; }
+@keyframes winpulse { to { transform: scale(1.07); } }
+
+.winline { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; overflow: visible; }
+.wl { fill: none; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; animation: draw .5s .15s ease-out backwards; }
+.wl.bg { stroke: var(--ink); stroke-width: 18; }
+.wl.fg { stroke: var(--mint); stroke-width: 8; }
+.winline.instant .wl { animation: none; }
+
+.shake { animation: shake .45s; }
+@keyframes shake {
+  10%, 90% { transform: translate(-2px, 1px); }
+  20%, 80% { transform: translate(4px, -2px); }
+  30%, 50%, 70% { transform: translate(-7px, 3px); }
+  40%, 60% { transform: translate(7px, -3px); }
+}
+
+.banner { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 6; text-align: center; }
+.banner div { animation: bannerOut .4s 2.4s forwards; }
+.banner b {
+  display: inline-block; font-size: clamp(2rem, 10vw, 3.3rem); font-weight: 900; line-height: 1.05;
+  color: var(--yellow); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill;
+  text-shadow: 5px 5px 0 var(--ink); transform: rotate(-6deg);
+  animation: bannerIn .55s cubic-bezier(.2, 1.7, .4, 1) both;
+}
+.banner small { display: block; margin-top: 6px; color: #fff; font-size: 1.05rem; text-shadow: 2px 2px 0 var(--ink); }
+@keyframes bannerIn { from { transform: rotate(-6deg) scale(.1); opacity: 0; } to { transform: rotate(-6deg) scale(1); opacity: 1; } }
+@keyframes bannerOut { to { opacity: 0; transform: scale(1.3); } }
+
+/* ---------- Dessous ---------- */
+.emos { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.emo {
+  width: 44px; height: 44px; border-radius: 50%; font-size: 1.4rem; cursor: pointer;
+  border: 3px solid var(--ink); background: #fff; box-shadow: 3px 3px 0 var(--ink);
+}
+.emo:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.float {
+  position: fixed; bottom: 14%; font-size: 2.6rem; z-index: 60; pointer-events: none;
+  animation: floatup 2.2s ease-out forwards;
+}
+@keyframes floatup {
+  0% { transform: translateY(0) scale(.5); opacity: 0; }
+  15% { opacity: 1; transform: translateY(-40px) scale(1.2); }
+  100% { transform: translateY(-50dvh) rotate(var(--r, 12deg)) scale(1); opacity: 0; }
+}
+
+.history { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; font-size: .75rem; color: #fff; min-height: 1.4em; }
+.hm { background: rgba(0, 0, 0, .28); border-radius: 8px; padding: 2px 7px; }
+.hm.x b { color: #ff9db6; }
+.hm.o b { color: var(--yellow); }
+.hm.last { outline: 2px solid var(--yellow); }
+
+.lb h3 { margin: 0 0 4px; font-size: 1rem; }
+.lbrow { display: grid; grid-template-columns: 28px 1fr auto; gap: 6px; padding: 3px 0; font-size: .92rem; border-bottom: 2px dashed #dfe3ff; }
+.lbrow:last-child { border-bottom: 0; }
+.lbrow.you { color: var(--blue); }
+.lbrow em { font-style: normal; }
+.lb p { margin: 0; font-size: .9rem; opacity: .7; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+@media (max-height: 620px) {
+  :root { --bs: min(80vw, 42dvh, 440px); }
+  .logo { font-size: 2.2rem; }
+}
